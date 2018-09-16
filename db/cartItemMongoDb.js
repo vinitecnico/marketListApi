@@ -2,21 +2,21 @@
 const mongodb = require('./mongoDb');
 const Q = require('q');
 const moment = require('moment');
-const productSchema = require('../schema/productSchema');
+const cartItemSchema = require('../schema/cartItemSchema');
 
-class productMongoDb {
+class cartItemMongoDb {
 
     constructor() { }
 
-    insert(product) {
+    insert(item) {
         const defer = Q.defer();
         mongodb.connect()
             .then(db => {
-                product.created_at = new moment().toDate();
-                product.updated_at = new moment().toDate();
+                item.created_at = new moment().toDate();
+                item.updated_at = new moment().toDate();
 
-                var productDb = new productSchema(product);
-                productDb.save(function (error, result) {
+                let cartItemDb = new cartItemSchema(item);
+                cartItemDb.save(function (error, result) {
                     if (error) {
                         defer.reject(error.message);
                     } else {
@@ -27,17 +27,18 @@ class productMongoDb {
         return defer.promise;
     }
 
-    update(id, product) {
+    update(id, item) {
         const defer = Q.defer();
         mongodb.connect()
             .then(db => {
                 const newData = {
-                    productName: product.productName,
-                    productSize: product.productSize,
+                    product: item.product,
+                    quantity: item.quantity,
+                    price: item.price,
                     updated_at: new moment().toDate()
                 };
 
-                db.model('product').findOneAndUpdate({ _id: id }, newData, { upsert: true }, function (err, result) {
+                db.model('cartItem').findOneAndUpdate({ _id: id }, newData, { upsert: true }, function (err, result) {
                     if (err || !result) {
                         defer.reject(err.message);
                     } else {
@@ -53,7 +54,7 @@ class productMongoDb {
         mongodb.connect()
             .then(db => {
                 const filter = null;
-                var query = db.model('product').find(filter).sort('productName');
+                var query = db.model('cartItem').find(filter).sort('product.productName');
                 query.exec('find', function (err, result) {
                     if (err) {
                         defer.reject(err.message);
@@ -69,7 +70,7 @@ class productMongoDb {
         const defer = Q.defer();
         mongodb.connect()
             .then(db => {
-                db.model('product').findOne({_id: id}, (err, result) => {
+                db.model('cartItem').findOne({_id: id}, (err, result) => {
                     if (err || !result) {
                         defer.reject('Invalid id!');
                     } else {
@@ -84,7 +85,7 @@ class productMongoDb {
         const defer = Q.defer();
         mongodb.connect()
             .then(db => {
-                db.model('product').findByIdAndRemove({_id: id}, (err, result) => {
+                db.model('cartItem').findByIdAndRemove({_id: id}, (err, result) => {
                     if (err || !result) {
                         defer.reject('Invalid id!');
                     } else {
@@ -96,4 +97,4 @@ class productMongoDb {
     }
 }
 
-module.exports = productMongoDb;
+module.exports = cartItemMongoDb;

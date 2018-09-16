@@ -1,14 +1,14 @@
 'use strict';
 
-const ProductMiddleware = require('../middlewares/productMiddleware');
+const CartItemMiddleware = require('../middlewares/cartItemMiddleware');
 const config = require('../config');
 const Q = require('q');
 
 module.exports = function (app) {
 
-    app.get('/api/product', (req, res) => {
-        const productMiddleware = new ProductMiddleware();
-        productMiddleware.getAll()
+    app.get('/api/cartItem', (req, res) => {
+        const cartItemMiddleware = new CartItemMiddleware();
+        cartItemMiddleware.getAll()
             .then(function (response) {
                 res.status(200).json(response);
             })
@@ -17,10 +17,10 @@ module.exports = function (app) {
             });
     });
 
-    app.get('/api/product/:id', (req, res) => {
+    app.get('/api/cartItem/:id', (req, res) => {
         const id = req.param('id');
-        const productMiddleware = new ProductMiddleware();
-        productMiddleware.getById(id)
+        const cartItemMiddleware = new CartItemMiddleware();
+        cartItemMiddleware.getById(id)
             .then(function (response) {
                 res.status(200).json(response);
             })
@@ -29,10 +29,10 @@ module.exports = function (app) {
             });
     });
 
-    app.post('/api/product', function (req, res) {
-        const product = req.body;
-        const productMiddleware = new ProductMiddleware();
-        productMiddleware.insert(product)
+    app.post('/api/cartItem', function (req, res) {
+        const item = req.body;
+        const cartItemMiddleware = new CartItemMiddleware();
+        cartItemMiddleware.insert(item)
             .then(function (response) {
                 res.status(200).json(response);
             })
@@ -43,11 +43,11 @@ module.exports = function (app) {
             });
     });
 
-    app.put('/api/product/:id', function (req, res) {
+    app.put('/api/cartItem/:id', function (req, res) {
         const id = req.param('id');
-        const product = req.body;
-        const productMiddleware = new ProductMiddleware();
-        productMiddleware.update(id, product)
+        const item = req.body;
+        const cartItemMiddleware = new CartItemMiddleware();
+        cartItemMiddleware.update(id, item)
             .then(function (response) {
                 res.status(200).json(response);
             })
@@ -58,10 +58,10 @@ module.exports = function (app) {
             });
     });
 
-    app.delete('/api/product/:id', function (req, res) {
+    app.delete('/api/cartItem/:id', function (req, res) {
         const id = req.param('id');
-        const productMiddleware = new ProductMiddleware();
-        productMiddleware.deleteById(id)
+        const cartItemMiddleware = new CartItemMiddleware();
+        cartItemMiddleware.deleteById(id)
             .then(function (response) {
                 res.status(200).json(response);
             })

@@ -17,8 +17,8 @@ app.get('/', function (req, res) {
 });
 
 
-const productApi = require('./api/productApi')(app);
-
+require('./api/productApi')(app);
+require('./api/cartItemApi')(app);
 
 app.set('port', (process.env.PORT || 5000));
 
